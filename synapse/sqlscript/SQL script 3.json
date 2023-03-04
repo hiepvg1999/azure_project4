@@ -1,0 +1,17 @@
+{
+	"name": "SQL script 3",
+	"properties": {
+		"content": {
+			"query": "CREATE master KEY encryption BY password = 'test1234@coder';\n\nOPEN master KEY decryption BY password = 'test1234@coder';\nCLOSE master KEY\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "testudacity",
+				"poolName": "testudacity"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

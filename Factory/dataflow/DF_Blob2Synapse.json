@@ -1,6 +1,7 @@
 {
 	"name": "DF_Blob2Synapse",
 	"properties": {
+		"description": "Data flows to load the data from the data lake files into the Synapse Analytics data tables",
 		"type": "MappingDataFlow",
 		"typeProperties": {
 			"sources": [

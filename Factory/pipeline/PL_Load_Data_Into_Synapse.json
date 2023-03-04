@@ -23,7 +23,8 @@
 						"linkedService": {
 							"referenceName": "AzureDataLakeStoragev2",
 							"type": "LinkedServiceReference"
-						}
+						},
+						"folderPath": "dirstaging"
 					},
 					"compute": {
 						"coreCount": 8,
@@ -60,7 +61,8 @@
 						"linkedService": {
 							"referenceName": "AzureDataLakeStoragev2",
 							"type": "LinkedServiceReference"
-						}
+						},
+						"folderPath": "dirstaging"
 					},
 					"compute": {
 						"coreCount": 8,

@@ -1,0 +1,9 @@
+{
+	"name": "udacityproject4",
+	"location": "japaneast",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "e59368b3-5ff9-4b14-b7f5-9ed945f7eef8",
+		"tenantId": "9b7cbd77-6d6b-4879-8aba-63d7dfb18472"
+	}
+}

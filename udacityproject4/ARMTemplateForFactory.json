@@ -178,6 +178,72 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/PL_PayrollSummary')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "DF Data Aggregation",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DataAggregation",
+								"type": "DataFlowReference",
+								"parameters": {
+									"dataflow_param_fiscalyear": {
+										"value": "@pipeline().parameters.fiscalyear",
+										"type": "Expression"
+									}
+								},
+								"datasetParameters": {
+									"SynapsePayrollTbl": {},
+									"HistoricalPayrollData": {},
+									"PayrollSummary": {}
+								}
+							},
+							"staging": {
+								"linkedService": {
+									"referenceName": "AzureDataLakeStoragev2",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "dirstaging"
+							},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"fiscalyear": {
+						"type": "int",
+						"defaultValue": 2021
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/DataAggregation')]",
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStoragev2')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/AzureSqlTable1')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1402,9 +1468,25 @@
 						"     dataflow_param_fiscalyear as integer",
 						"}",
 						"source(output(",
+						"          FiscalYear as integer,",
+						"          PayrollNumber as integer,",
+						"          AgencyID as string,",
+						"          AgencyName as string,",
 						"          EmployeeID as string,",
 						"          LastName as string,",
-						"          FirstName as string",
+						"          FirstName as string,",
+						"          AgencyStartDate as date,",
+						"          WorkLocationBorough as string,",
+						"          TitleCode as string,",
+						"          TitleDescription as string,",
+						"          LeaveStatusasofJune30 as string,",
+						"          BaseSalary as double,",
+						"          PayBasis as string,",
+						"          RegularHours as double,",
+						"          RegularGrossPaid as double,",
+						"          OTHours as double,",
+						"          TotalOTPaid as double,",
+						"          TotalOtherPay as double",
 						"     ),",
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
@@ -1424,13 +1506,13 @@
 						"          TitleCode as string,",
 						"          TitleDescription as string,",
 						"          LeaveStatusasofJune30 as string,",
-						"          BaseSalary as float,",
+						"          BaseSalary as double,",
 						"          PayBasis as string,",
-						"          RegularHours as float,",
-						"          RegularGrossPaid as float,",
-						"          OTHours as float,",
-						"          TotalOTPaid as float,",
-						"          TotalOtherPay as float",
+						"          RegularHours as double,",
+						"          RegularGrossPaid as double,",
+						"          OTHours as double,",
+						"          TotalOTPaid as double,",
+						"          TotalOtherPay as double",
 						"     ),",
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
@@ -1466,73 +1548,6 @@
 				"[concat(variables('factoryId'), '/datasets/Synapse_NYC_Payroll_Data')]",
 				"[concat(variables('factoryId'), '/datasets/historicalFiles')]",
 				"[concat(variables('factoryId'), '/datasets/Synapse_Payroll_Summary')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PL_PayrollSummary')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "DF Data Aggregation",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "DataAggregation",
-								"type": "DataFlowReference",
-								"parameters": {
-									"dataflow_param_fiscalyear": {
-										"value": "@pipeline().parameters.fiscalyear",
-										"type": "Expression"
-									}
-								},
-								"datasetParameters": {
-									"SynapsePayrollTbl": {},
-									"HistoricalPayrollData": {},
-									"PayrollSummary": {}
-								},
-								"linkedServiceParameters": {}
-							},
-							"staging": {
-								"linkedService": {
-									"referenceName": "AzureDataLakeStoragev2",
-									"type": "LinkedServiceReference"
-								},
-								"folderPath": "dirstaging"
-							},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"parameters": {
-					"fiscalyear": {
-						"type": "int",
-						"defaultValue": 2021
-					}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/DataAggregation')]",
-				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStoragev2')]"
 			]
 		}
 	]
